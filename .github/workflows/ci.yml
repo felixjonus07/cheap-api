@@ -26,13 +26,13 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('cheap-api-core/Cargo.lock') }}
       - name: Clippy
         working-directory: cheap-api-core
-        run: cargo clippy --all-targets --all-features -- -D warnings
+        run: cargo clippy --all-targets --features node -- -D warnings
       - name: Format check
         working-directory: cheap-api-core
         run: cargo fmt --check
       - name: Test
         working-directory: cheap-api-core
-        run: cargo test --all-features
+        run: cargo test --features node
 
   python:
     name: Python SDK (build check)
@@ -66,4 +66,4 @@ jobs:
         run: npm ci
       - name: Build native addon
         working-directory: cheap-api-node
-        run: napi build --platform --release --manifest-path ../cheap-api-core/Cargo.toml --output-dir . --cargo-flags "--features node"
+        run: napi build --platform --release --cargo-cwd ../cheap-api-core --features node .

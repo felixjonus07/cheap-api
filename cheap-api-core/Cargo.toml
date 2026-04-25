@@ -1,6 +1,6 @@
 [package]
 name = "cheap-api-core"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 description = "Core caching + forwarding engine for the CheapAPI SDK"
 license = "MIT"

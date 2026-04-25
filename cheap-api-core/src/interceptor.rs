@@ -107,9 +107,7 @@ impl Interceptor {
             if live.status == 429 && live.body.contains("insufficient_quota") {
                 warn!("OpenAI quota exceeded (429). Returning Quota Shield response.");
 
-                let fake_body = format!(
-                    r#"{{"choices": [{{"message": {{"role": "assistant", "content": "[QUOTA SHIELD] Your prompt was intercepted. OpenAI returned 429, but CheapAPI is keeping your app alive."}}}}]}}"#
-                );
+                let fake_body = r#"{"choices": [{"message": {"role": "assistant", "content": "[QUOTA SHIELD] Your prompt was intercepted. OpenAI returned 429, but CheapAPI is keeping your app alive."}}]}"#.to_string();
 
                 return Ok(InterceptResponse {
                     status: 200,

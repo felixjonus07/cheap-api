@@ -26,11 +26,11 @@ pub mod node {
             cache_errors: bool,
             max_cacheable_body_bytes: u32,
         ) -> Result<CheapApiNode> {
-            let store = MongoAdapter::new(MongoAdapterConfig {
+            let store = MongoAdapter::connect(MongoAdapterConfig {
                 connection_uri,
                 database,
                 collection,
-                ttl_seconds: ttl_seconds.map(|s| s as u64),
+                ttl_seconds,
             }).await.map_err(|e| Error::from_reason(e.to_string()))?;
 
             let config = InterceptorConfig {
@@ -93,11 +93,11 @@ pub mod python {
         ) -> PyResult<PyObject> {
             let rt = tokio::runtime::Runtime::new().unwrap();
             let store = rt.block_on(async {
-                MongoAdapter::new(MongoAdapterConfig {
+                MongoAdapter::connect(MongoAdapterConfig {
                     connection_uri,
                     database,
                     collection,
-                    ttl_seconds,
+                    ttl_seconds: ttl_seconds.map(|s| s as u32),
                 }).await
             }).map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))?;
 
