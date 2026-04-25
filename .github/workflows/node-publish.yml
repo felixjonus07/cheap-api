@@ -3,15 +3,12 @@ name: Publish Node SDK to npm
 on:
   push:
     tags:
-      - "node-v*"   # trigger on tags like node-v0.1.0
+      - "node-v*"
 
 permissions:
-  contents: write   # needed to upload release assets
+  contents: write
 
 jobs:
-  # ─────────────────────────────────────────────────────────────────────────────
-  # Build native .node addons for each platform
-  # ─────────────────────────────────────────────────────────────────────────────
   build:
     name: Build (${{ matrix.target }})
     runs-on: ${{ matrix.os }}
@@ -19,60 +16,48 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Windows x64
           - os: windows-latest
             target: x86_64-pc-windows-msvc
-            build: npm run build
-
-          # macOS ARM (Apple Silicon)
           - os: macos-latest
             target: aarch64-apple-darwin
-            build: npm run build -- --target aarch64-apple-darwin
-
-          # macOS Intel
           - os: macos-latest
             target: x86_64-apple-darwin
-            build: npm run build -- --target x86_64-apple-darwin
-
-          # Linux x64 (glibc)
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
-            build: npm run build
-
-          # Linux ARM64 (glibc)
           - os: ubuntu-latest
             target: aarch64-unknown-linux-gnu
-            build: npm run build -- --target aarch64-unknown-linux-gnu
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Rust toolchain
+      - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
 
-      - name: Install cross-compilation tools (Linux ARM)
+      - name: Install cross-compilation tools (Linux ARM64)
         if: matrix.target == 'aarch64-unknown-linux-gnu'
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-aarch64-linux-gnu
-        env:
-          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           registry-url: "https://registry.npmjs.org"
 
-      - name: Install dependencies
+      - name: Install napi-rs CLI globally
+        run: npm install -g @napi-rs/cli@2
+
+      - name: Install node dependencies
         working-directory: cheap-api-node
         run: npm ci
 
-      - name: Build native addon
+      - name: Build native addon (cross-compile)
         working-directory: cheap-api-node
-        run: ${{ matrix.build }}
+        run: |
+          napi build --platform --release --target ${{ matrix.target }} --manifest-path ../cheap-api-core/Cargo.toml --output-dir .
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
@@ -82,9 +67,6 @@ jobs:
           name: binding-${{ matrix.target }}
           path: cheap-api-node/*.node
 
-  # ─────────────────────────────────────────────────────────────────────────────
-  # Collect all platform binaries and publish to npm
-  # ─────────────────────────────────────────────────────────────────────────────
   publish:
     name: Publish to npm
     runs-on: ubuntu-latest
@@ -96,10 +78,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           registry-url: "https://registry.npmjs.org"
 
-      - name: Install dependencies
+      - name: Install node dependencies
         working-directory: cheap-api-node
         run: npm ci
 
