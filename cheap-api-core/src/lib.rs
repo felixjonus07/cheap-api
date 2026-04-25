@@ -16,6 +16,7 @@ pub mod hasher;
 pub mod interceptor;
 pub mod mongo_adapter;
 pub mod store;
+pub mod bindings;
 
 // Re-export the most important types so callers don't need to dig into submodules
 pub use error::{CheapApiError, Result};

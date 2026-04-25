@@ -12,5 +12,5 @@ dependencies = [
 ]
 
 [tool.maturin]
-features = ["pyo3/extension-module"]
+features = ["python", "pyo3/extension-module"]
 module-name = "cheap_api._core"

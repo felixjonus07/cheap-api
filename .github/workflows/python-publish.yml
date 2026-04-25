@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: read
-  id-token: write   # required for PyPI trusted publishing
+  id-token: write
 
 jobs:
   build-wheels:
@@ -52,7 +52,8 @@ jobs:
 
       - name: Build wheel
         working-directory: cheap-api-python
-        run: maturin build --release --target ${{ matrix.target }} --out dist
+        run: |
+          maturin build --release --target ${{ matrix.target }} --out dist --manifest-path ../cheap-api-core/Cargo.toml --features python
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
@@ -75,7 +76,7 @@ jobs:
       - run: pip install "maturin>=1.0,<2.0"
       - name: Build sdist
         working-directory: cheap-api-python
-        run: maturin sdist --out dist
+        run: maturin sdist --out dist --manifest-path ../cheap-api-core/Cargo.toml
       - uses: actions/upload-artifact@v4
         with:
           name: sdist
