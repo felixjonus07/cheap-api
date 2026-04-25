@@ -57,7 +57,7 @@ jobs:
       - name: Build native addon (cross-compile)
         working-directory: cheap-api-node
         run: |
-          napi build --platform --release --target ${{ matrix.target }} --manifest-path ../cheap-api-core/Cargo.toml --output-dir . --cargo-flags "--features node"
+          napi build --platform --release --target ${{ matrix.target }} --cargo-cwd ../cheap-api-core --features node .
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 

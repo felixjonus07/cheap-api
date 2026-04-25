@@ -1,6 +1,6 @@
 [package]
 name = "cheap-api-core"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Core caching + forwarding engine for the CheapAPI SDK"
 license = "MIT"
@@ -40,7 +40,7 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 # ── SDK Bindings ───────────────────────────────────────────────────────────────
 napi = { version = "2.12", default-features = false, features = ["async", "serde-json"], optional = true }
 napi-derive = { version = "2.12", optional = true }
-pyo3 = { version = "0.21", features = ["tokio", "serde"], optional = true }
+pyo3 = { version = "0.21", features = ["serde"], optional = true }
 
 [features]
 node = ["napi", "napi-derive"]
