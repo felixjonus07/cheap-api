@@ -1,0 +1,43 @@
+[package]
+name = "cheap-api-core"
+version = "0.1.0"
+edition = "2021"
+description = "Core caching + forwarding engine for the CheapAPI SDK"
+license = "MIT"
+
+[lib]
+name = "cheap_api_core"
+crate-type = ["cdylib", "rlib"]   # cdylib for FFI; rlib for Rust-side use
+
+[dependencies]
+# ── Async runtime ──────────────────────────────────────────────────────────────
+tokio = { version = "1", features = ["full"] }
+
+# ── HTTP forwarding ─────────────────────────────────────────────────────────────
+reqwest = { version = "0.12", features = ["json", "stream"] }
+
+# ── Hashing ─────────────────────────────────────────────────────────────────────
+sha2   = "0.10"
+hex    = "0.4"
+
+# ── Serialisation ────────────────────────────────────────────────────────────────
+serde      = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# ── Database adapter — MongoDB ────────────────────────────────────────────────
+# tokio-runtime feature wires the driver into our existing tokio executor.
+# bson helpers for serde are bundled inside the driver; no separate bson crate needed.
+mongodb = "3"
+
+# ── Error handling ───────────────────────────────────────────────────────────────
+thiserror = "1"
+
+# ── async fn in traits ───────────────────────────────────────────────────────────
+async-trait = "0.1"
+
+# ── Logging ──────────────────────────────────────────────────────────────────────
+tracing            = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }

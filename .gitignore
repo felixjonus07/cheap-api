@@ -1,0 +1,31 @@
+# Rust
+target/
+Cargo.lock
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.pdb
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.env
+
+# Node
+node_modules/
+*.node
+dist/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.user
+
+# OS
+.DS_Store
+Thumbs.db

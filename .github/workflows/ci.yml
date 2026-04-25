@@ -1,0 +1,92 @@
+name: CI — Build & Test
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Rust core tests
+  # ─────────────────────────────────────────────────────────────────────────────
+  rust:
+    name: Rust Core (test + clippy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Cache Cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            cheap-api-core/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('cheap-api-core/Cargo.lock') }}
+
+      - name: Lint (clippy)
+        working-directory: cheap-api-core
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Format check
+        working-directory: cheap-api-core
+        run: cargo fmt --check
+
+      - name: Run tests
+        working-directory: cheap-api-core
+        run: cargo test
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Python SDK — build check (no publish)
+  # ─────────────────────────────────────────────────────────────────────────────
+  python:
+    name: Python SDK (build check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install maturin
+        run: pip install "maturin>=1.0,<2.0"
+
+      - name: Build wheel (debug)
+        working-directory: cheap-api-python
+        run: maturin build
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Node SDK — build check (no publish)
+  # ─────────────────────────────────────────────────────────────────────────────
+  node:
+    name: Node SDK (build check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: cheap-api-node
+        run: npm ci
+
+      - name: Build native addon
+        working-directory: cheap-api-node
+        run: npm run build
