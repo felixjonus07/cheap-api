@@ -153,9 +153,4 @@ pub mod python {
         }
     }
 
-    #[pymodule]
-    fn _core(m: &Bound<'_, PyModule>) -> PyResult<()> {
-        m.add_class::<CheapApiPython>()?;
-        Ok(())
-    }
 }

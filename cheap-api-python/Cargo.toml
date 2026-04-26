@@ -1,0 +1,13 @@
+[package]
+name = "cheap-api-python"
+version = "0.1.4"
+edition = "2021"
+
+[lib]
+name = "_core"
+crate-type = ["cdylib"]
+
+[dependencies]
+cheap-api-core = { path = "../cheap-api-core", features = ["python"] }
+pyo3        = { version = "0.21", features = ["extension-module"] }
+tokio       = { version = "1",    features = ["full"] }

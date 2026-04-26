@@ -26,13 +26,13 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('cheap-api-core/Cargo.lock') }}
       - name: Clippy
         working-directory: cheap-api-core
-        run: cargo clippy --all-targets --features node -- -D warnings
+        run: cargo clippy --all-targets -- -D warnings
       - name: Format check
         working-directory: cheap-api-core
         run: cargo fmt --check
       - name: Test
         working-directory: cheap-api-core
-        run: cargo test --features node
+        run: cargo test
 
   python:
     name: Python SDK (build check)
@@ -47,7 +47,7 @@ jobs:
       - run: pip install "maturin>=1.0,<2.0"
       - name: Build wheel (debug)
         working-directory: cheap-api-python
-        run: maturin build --manifest-path ../cheap-api-core/Cargo.toml --features "python,pyo3/extension-module"
+        run: maturin build
 
   node:
     name: Node SDK (build check)

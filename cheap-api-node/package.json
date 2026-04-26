@@ -1,12 +1,14 @@
 {
-  "name": "@cheap-api/node",
+  "name": "cheap-api-node",
   "version": "0.1.4",
   "main": "index.js",
   "types": "index.d.ts",
+  "description": "Blazing fast API caching SDK powered by Rust — Node.js bindings",
+  "license": "MIT",
   "napi": {
-    "name": "cheap-api",
+    "name": "cheap-api-node",
     "package": {
-      "name": "@cheap-api/node"
+      "name": "cheap-api-node"
     }
   },
   "scripts": {

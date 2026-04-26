@@ -17,8 +17,16 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+          - os: macos-latest
+            target: aarch64-apple-darwin
+          - os: macos-latest
+            target: x86_64-apple-darwin
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
 
     steps:
       - uses: actions/checkout@v4
@@ -43,9 +51,10 @@ jobs:
         run: pip install "maturin>=1.0,<2.0"
 
       - name: Build wheel
+        # cheap-api-python/ now has its own Cargo.toml + pyproject.toml,
+        # so maturin finds everything without --manifest-path
         working-directory: cheap-api-python
-        run: |
-          maturin build --release --target ${{ matrix.target }} --out dist --manifest-path ../cheap-api-core/Cargo.toml --features "python,pyo3/extension-module"
+        run: maturin build --release --target ${{ matrix.target }} --out dist
         env:
           CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
 
@@ -67,8 +76,9 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
       - run: pip install "maturin>=1.0,<2.0"
       - name: Build sdist
+        # pyproject.toml and Cargo.toml are both in cheap-api-python/ now
         working-directory: cheap-api-python
-        run: maturin sdist --out dist --manifest-path ../cheap-api-core/Cargo.toml
+        run: maturin sdist --out dist
       - uses: actions/upload-artifact@v4
         with:
           name: sdist
