@@ -25,22 +25,46 @@ mod tests {
 
     #[test]
     fn same_inputs_produce_same_key() {
-        let k1 = compute_cache_key("https://api.openai.com/v1/chat/completions", "POST", b"{\"model\":\"gpt-4\"}");
-        let k2 = compute_cache_key("https://api.openai.com/v1/chat/completions", "POST", b"{\"model\":\"gpt-4\"}");
+        let k1 = compute_cache_key(
+            "https://api.openai.com/v1/chat/completions",
+            "POST",
+            b"{\"model\":\"gpt-4\"}",
+        );
+        let k2 = compute_cache_key(
+            "https://api.openai.com/v1/chat/completions",
+            "POST",
+            b"{\"model\":\"gpt-4\"}",
+        );
         assert_eq!(k1, k2);
     }
 
     #[test]
     fn different_bodies_produce_different_keys() {
-        let k1 = compute_cache_key("https://api.openai.com/v1/chat/completions", "POST", b"body_a");
-        let k2 = compute_cache_key("https://api.openai.com/v1/chat/completions", "POST", b"body_b");
+        let k1 = compute_cache_key(
+            "https://api.openai.com/v1/chat/completions",
+            "POST",
+            b"body_a",
+        );
+        let k2 = compute_cache_key(
+            "https://api.openai.com/v1/chat/completions",
+            "POST",
+            b"body_b",
+        );
         assert_ne!(k1, k2);
     }
 
     #[test]
     fn different_urls_produce_different_keys() {
-        let k1 = compute_cache_key("https://api.openai.com/v1/chat/completions", "POST", b"same");
-        let k2 = compute_cache_key("https://generativelanguage.googleapis.com/v1beta/models", "POST", b"same");
+        let k1 = compute_cache_key(
+            "https://api.openai.com/v1/chat/completions",
+            "POST",
+            b"same",
+        );
+        let k2 = compute_cache_key(
+            "https://generativelanguage.googleapis.com/v1beta/models",
+            "POST",
+            b"same",
+        );
         assert_ne!(k1, k2);
     }
 

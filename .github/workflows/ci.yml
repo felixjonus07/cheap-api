@@ -47,7 +47,7 @@ jobs:
       - run: pip install "maturin>=1.0,<2.0"
       - name: Build wheel (debug)
         working-directory: cheap-api-python
-        run: maturin build --manifest-path ../cheap-api-core/Cargo.toml --features python
+        run: maturin build --manifest-path ../cheap-api-core/Cargo.toml --features "python,pyo3/extension-module"
 
   node:
     name: Node SDK (build check)

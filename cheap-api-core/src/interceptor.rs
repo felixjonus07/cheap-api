@@ -72,7 +72,11 @@ impl Interceptor {
             .build()
             .expect("failed to build HTTP client");
 
-        Self { store, client, config }
+        Self {
+            store,
+            client,
+            config,
+        }
     }
 
     // The main function — called once per API request from the language wrapper.
@@ -166,11 +170,13 @@ impl Interceptor {
 
         // OpenAI / Anthropic style: { usage: { prompt_tokens, completion_tokens } }
         if let Some(usage) = json.get("usage") {
-            let prompt = usage.get("prompt_tokens")
+            let prompt = usage
+                .get("prompt_tokens")
                 .and_then(|t| t.as_u64())
                 .or_else(|| usage.get("input_tokens").and_then(|t| t.as_u64()));
 
-            let completion = usage.get("completion_tokens")
+            let completion = usage
+                .get("completion_tokens")
                 .and_then(|t| t.as_u64())
                 .or_else(|| usage.get("output_tokens").and_then(|t| t.as_u64()));
 
@@ -214,8 +220,8 @@ impl Interceptor {
         for (key, val) in &req.headers {
             let header_name = HeaderName::from_bytes(key.as_bytes())
                 .map_err(|e| CheapApiError::Encoding(e.to_string()))?;
-            let header_value = HeaderValue::from_str(val)
-                .map_err(|e| CheapApiError::Encoding(e.to_string()))?;
+            let header_value =
+                HeaderValue::from_str(val).map_err(|e| CheapApiError::Encoding(e.to_string()))?;
             builder = builder.header(header_name, header_value);
         }
 
@@ -339,7 +345,10 @@ mod tests {
     fn should_cache_errors_when_flag_is_set() {
         let ix = Interceptor::new(
             MemoryStore::new(),
-            InterceptorConfig { cache_errors: true, ..Default::default() },
+            InterceptorConfig {
+                cache_errors: true,
+                ..Default::default()
+            },
         );
         assert!(ix.should_cache(500, 100));
         assert!(ix.should_cache(429, 100));

@@ -5,10 +5,10 @@ use async_trait::async_trait;
 // We store everything we need to replay it later without hitting the API again.
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct CachedResponse {
-    pub status: u16,                                     // e.g. 200, 404
+    pub status: u16,                                        // e.g. 200, 404
     pub headers: std::collections::HashMap<String, String>, // response headers
-    pub body: String,                                    // the response body text
-    pub cached_at: u64,                                  // when it was saved (Unix seconds)
+    pub body: String,                                       // the response body text
+    pub cached_at: u64,                                     // when it was saved (Unix seconds)
 }
 
 // This trait is the contract that every cache backend must follow.

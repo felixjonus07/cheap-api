@@ -1,14 +1,14 @@
-use std::sync::Arc;
-use crate::interceptor::{Interceptor, InterceptorConfig, InterceptRequest};
+use crate::interceptor::{InterceptRequest, Interceptor, InterceptorConfig};
 use crate::mongo_adapter::{MongoAdapter, MongoAdapterConfig};
+use std::sync::Arc;
 
 // ── Node.js Bindings ──────────────────────────────────────────────────────────
 
 #[cfg(feature = "node")]
 pub mod node {
     use super::*;
-    use napi_derive::napi;
     use napi::bindgen_prelude::*;
+    use napi_derive::napi;
 
     #[napi(js_name = "CheapApi")]
     pub struct CheapApiNode {
@@ -31,7 +31,9 @@ pub mod node {
                 database,
                 collection,
                 ttl_seconds,
-            }).await.map_err(|e| Error::from_reason(e.to_string()))?;
+            })
+            .await
+            .map_err(|e| Error::from_reason(e.to_string()))?;
 
             let config = InterceptorConfig {
                 cache_errors,
@@ -58,7 +60,10 @@ pub mod node {
                 body: body.unwrap_or_default(),
             };
 
-            let res = self.inner.intercept(req).await
+            let res = self
+                .inner
+                .intercept(req)
+                .await
                 .map_err(|e| Error::from_reason(e.to_string()))?;
 
             serde_json::to_value(res).map_err(|e| Error::from_reason(e.to_string()))
@@ -92,14 +97,17 @@ pub mod python {
             max_cacheable_body_bytes: usize,
         ) -> PyResult<PyObject> {
             let rt = tokio::runtime::Runtime::new().unwrap();
-            let store = rt.block_on(async {
-                MongoAdapter::connect(MongoAdapterConfig {
-                    connection_uri,
-                    database,
-                    collection,
-                    ttl_seconds: ttl_seconds.map(|s| s as u32),
-                }).await
-            }).map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))?;
+            let store = rt
+                .block_on(async {
+                    MongoAdapter::connect(MongoAdapterConfig {
+                        connection_uri,
+                        database,
+                        collection,
+                        ttl_seconds: ttl_seconds.map(|s| s as u32),
+                    })
+                    .await
+                })
+                .map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))?;
 
             let config = InterceptorConfig {
                 cache_errors,
@@ -129,9 +137,9 @@ pub mod python {
                 body: body.unwrap_or_default(),
             };
 
-            let res = rt.block_on(async {
-                self.inner.intercept(req).await
-            }).map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))?;
+            let res = rt
+                .block_on(async { self.inner.intercept(req).await })
+                .map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))?;
 
             Python::with_gil(|py| {
                 let dict = PyDict::new_bound(py);
