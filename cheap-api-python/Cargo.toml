@@ -8,6 +8,12 @@ name = "_core"
 crate-type = ["cdylib"]
 
 [dependencies]
+# Pull in the core crate with the "python" feature enabled —
+# this activates the pyo3 bindings in cheap-api-core/src/bindings.rs
 cheap-api-core = { path = "../cheap-api-core", features = ["python"] }
-pyo3        = { version = "0.21", features = ["extension-module"] }
-tokio       = { version = "1",    features = ["full"] }
+
+# pyo3 "extension-module" is required when building a .so/.pyd Python extension
+pyo3  = { version = "0.21", features = ["extension-module"] }
+
+# Tokio runtime used by the bindings for async → sync bridging
+tokio = { version = "1", features = ["full"] }

@@ -1,12 +1,10 @@
-use crate::interceptor::{InterceptRequest, Interceptor, InterceptorConfig};
-use crate::mongo_adapter::{MongoAdapter, MongoAdapterConfig};
-use std::sync::Arc;
-
 // ── Node.js Bindings ──────────────────────────────────────────────────────────
 
 #[cfg(feature = "node")]
 pub mod node {
-    use super::*;
+    use crate::interceptor::{InterceptRequest, Interceptor, InterceptorConfig};
+    use crate::mongo_adapter::{MongoAdapter, MongoAdapterConfig};
+    use std::sync::Arc;
     use napi::bindgen_prelude::*;
     use napi_derive::napi;
 
@@ -75,13 +73,15 @@ pub mod node {
 
 #[cfg(feature = "python")]
 pub mod python {
-    use super::*;
+    use crate::interceptor::{InterceptRequest, Interceptor, InterceptorConfig};
+    use crate::mongo_adapter::{MongoAdapter, MongoAdapterConfig};
+    use std::sync::Arc;
     use pyo3::prelude::*;
     use pyo3::types::PyDict;
 
     #[pyclass(name = "CheapApi")]
     pub struct CheapApiPython {
-        inner: Interceptor,
+        pub(crate) inner: Interceptor,
     }
 
     #[pymethods]
@@ -152,5 +152,4 @@ pub mod python {
             })
         }
     }
-
 }
