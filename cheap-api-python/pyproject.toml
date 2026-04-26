@@ -5,7 +5,17 @@ build-backend = "maturin"
 [project]
 name = "cheap-api"
 version = "0.1.4"
+description = "A blazing fast API caching SDK powered by Rust"
+readme = "README.md"
 requires-python = ">=3.8"
+license = { text = "MIT" }
+keywords = ["api", "cache", "sdk", "rust", "llm"]
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Internet :: WWW/HTTP",
+]
 dependencies = [
     "requests",
     "httpx"
