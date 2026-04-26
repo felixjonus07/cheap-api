@@ -4,9 +4,9 @@
 pub mod node {
     use crate::interceptor::{InterceptRequest, Interceptor, InterceptorConfig};
     use crate::mongo_adapter::{MongoAdapter, MongoAdapterConfig};
-    use std::sync::Arc;
     use napi::bindgen_prelude::*;
     use napi_derive::napi;
+    use std::sync::Arc;
 
     #[napi(js_name = "CheapApi")]
     pub struct CheapApiNode {
@@ -75,9 +75,9 @@ pub mod node {
 pub mod python {
     use crate::interceptor::{InterceptRequest, Interceptor, InterceptorConfig};
     use crate::mongo_adapter::{MongoAdapter, MongoAdapterConfig};
-    use std::sync::Arc;
     use pyo3::prelude::*;
     use pyo3::types::PyDict;
+    use std::sync::Arc;
 
     #[pyclass(name = "CheapApi")]
     pub struct CheapApiPython {
