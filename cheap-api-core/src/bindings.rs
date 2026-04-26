@@ -87,7 +87,7 @@ pub mod python {
     #[pymethods]
     impl CheapApiPython {
         #[staticmethod]
-        #[pyo3(signature = (connection_uri, database, collection, ttl_seconds=None, cache_errors=False, max_cacheable_body_bytes=10485760))]
+        #[pyo3(signature = (connection_uri, database, collection, ttl_seconds=None, cache_errors=false, max_cacheable_body_bytes=10485760))]
         pub fn with_mongodb(
             connection_uri: String,
             database: String,

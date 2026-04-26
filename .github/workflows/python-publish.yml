@@ -68,7 +68,7 @@ jobs:
       - run: pip install "maturin>=1.0,<2.0"
       - name: Build sdist
         working-directory: cheap-api-python
-        run: maturin sdist --out dist --manifest-path ../cheap-api-core/Cargo.toml --features "python,pyo3/extension-module"
+        run: maturin sdist --out dist --manifest-path ../cheap-api-core/Cargo.toml
       - uses: actions/upload-artifact@v4
         with:
           name: sdist
