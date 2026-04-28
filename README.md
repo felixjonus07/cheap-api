@@ -4,8 +4,8 @@
 > A Rust-powered caching layer that transparently intercepts your HTTP requests, stores responses in MongoDB, and replays them instantly — saving you money on every repeated API call.
 
 [![Python](https://img.shields.io/pypi/v/cheap-api?label=pip%20install%20cheap-api&color=blue)](https://pypi.org/project/cheap-api/)
-[![npm](https://img.shields.io/npm/v/@cheap-api/node?label=npm%20install%20%40cheap-api%2Fnode&color=red)](https://www.npmjs.com/package/@cheap-api/node)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![npm](https://img.shields.io/npm/v/cheap-api/node?label=npm%20install%20%40cheap-api%2Fnode&color=red)](https://www.npmjs.com/package/@cheap-api/node)
+
 
 ## How It Works
 
